@@ -628,3 +628,32 @@ class ENet(nn.Module):
         x = self.transposed_conv(x, output_size=input_size)
 
         return x
+
+
+if __name__ == '__main__':
+    import time
+    from tqdm import tqdm
+
+    use_gpu = False
+    epochs = 1000
+
+    model = ENet(12)
+    # print(model)
+    input = torch.rand(1, 3, 720, 1280)
+
+    model.eval()
+    if use_gpu:
+        model = model.cuda()
+        input = input.cuda()
+
+    start = time.time()
+    for i in tqdm(range(epochs)):
+        with torch.no_grad():
+           output = model(input)
+    spends = (time.time() - start)*1000/epochs
+
+    print("Average spend {} ms".format(spends))
+    # GPU Average spend 46.96639370918274 ms
+    # CPU Average spend 608.8589773178101 ms
+
+
